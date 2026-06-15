@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детская Мега-Энциклопедия: 100 Английских Слов</title>
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 2px, transparent 2px);
+            background-size: 30px 30px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            margin: 0;
+            padding: 30px 10px;
+            text-align: center;
+            color: #334155;
+        }
+
+        h1 {
+            color: #0284c7;
+            font-size: 42px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px #e0f2fe;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #64748b;
+            margin-bottom: 35px;
+        }
+
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 28px;
+            margin: 20px 0;
+            padding: 5px 15px;
+            border-bottom: 4px dashed #cbd5e1;
+            display: inline-block;
+            color: #1e293b;
+            font-weight: bold;
+        }
+
+        .grid-container {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 15px;
+            width: 150px;
+            text-align: center;
+            box-shadow: 0 8px 0px #e2e8f0, 0 12px 15px -5px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+            user-select: none;
+            border: 4px solid #cbd5e1; /* Базовый цвет */
+        }
+
+        /* Динамические цвета рамок по категориям */
+        .card[data-cat="animals"] { border-color: #f97316; }
+        .card[data-cat="things"] { border-color: #3b82f6; }
+        .card[data-cat="professions"] { border-color: #a855f7; }
+        .card[data-cat="food"] { border-color: #22c55e; }
+        .card[data-cat="colors"] { border-color: #ec4899; }
+        .card[data-cat="nature"] { border-color: #06b6d4; }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 0px #e2e8f0, 0 18px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:active, .card.playing {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0px #e2e8f0, 0 6px 8px -5px rgba(0, 0, 0, 0.08);
+            background-color: #f8fafc;
+        }
+
+        .emoji {
+            font-size: 65px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .word {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            word-wrap: break-word;
+        }
+
+        /* Цвета текста слов */
+        .card[data-cat="animals"] .word { color: #ea580c; }
+        .card[data-cat="things"] .word { color: #2563eb; }
+        .card[data-cat="professions"] .word { color: #9333ea; }
+        .card[data-cat="food"] .word { color: #16a34a; }
+        .card[data-cat="colors"] .word { color: #db2777; }
+        .card[data-cat="nature"] .word { color: #0891b2; }
+
+        .translations {
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 5px 2px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .trans-ru { color: #475569; margin-bottom: 1px; }
+        .trans-uz { color: #0284c7; }
+    </style>
+</head>
+<body>
+
+    <h1>Детская Мега-Энциклопедия 🌟</h1>
+    <p class="subtitle">🚀 Ровно 100 интерактивных карточек на трех языках!</p>
+
+    <!-- Сюда JavaScript автоматически добавит все 100 карточек -->
+    <div id="main-content"></div>
+
+    <script>
+        // БАЗА ДАННЫХ НА 100 СЛОВ
+        const database = [
+            // === ЖИВОТНЫЕ (20) ===
+            { cat: "animals", catName: "🐱 Животные (Animals)", eng: "Cat", ru: "Кошка", uz: "Mushuk", emoji: "🐈‍⬛" },
+            { cat: "animals", eng: "Dog", ru: "Собака", uz: "Kuchuk", emoji: "🐕" },
+            { cat: "animals", eng: "Lion", ru: "Лев", uz: "Sher", emoji: "🦁" },
+            { cat: "animals", eng: "Frog", ru: "Лягушка", uz: "Baqa", emoji: "🐸" },
+            { cat: "animals", eng: "Monkey", ru: "Обезьяна", uz: "Maymun", emoji: "🐒" },
+            { cat: "animals", eng: "Bear", ru: "Медведь", uz: "Ayiq", emoji: "🐻" },
+            { cat: "animals", eng: "Elephant", ru: "Слон", uz: "Fil", emoji: "🐘" },
+            { cat: "animals", eng: "Wolf", ru: "Волк", uz: "Bo'ri", emoji: "🐺" },
+            { cat: "animals", eng: "Fox", ru: "Лиса", uz: "Tulki", emoji: "🦊" },
+            { cat: "animals", eng: "Tiger", ru: "Тигр", uz: "Yo'lbars", emoji: "🐯" },
+            { cat: "animals", eng: "Rabbit", ru: "Кролик", uz: "Quyon", emoji: "🐇" },
+            { cat: "animals", eng: "Mouse", ru: "Мышь", uz: "Sichqon", emoji: "🐁" },
+            { cat: "animals", eng: "Cow", ru: "Корова", uz: "Sigir", emoji: "🐄" },
+            { cat: "animals", eng: "Horse", ru: "Лошадь", uz: "Ot", emoji: "🐎" },
+            { cat: "animals", eng: "Sheep", ru: "Овца", uz: "Qo'y", emoji: "🐑" },
+            { cat: "animals", eng: "Duck", ru: "Утка", uz: "O'rdak", emoji: "🦆" },
+            { cat: "animals", eng: "Bird", ru: "Птица", uz: "Qush", emoji: "🐦" },
+            { cat: "animals", eng: "Shark", ru: "Акула", uz: "Akula", emoji: "🦈" },
+            { cat: "animals", eng: "Giraffe", ru: "Жираф", uz: "Jirafa", emoji: "🦒" },
+            { cat: "animals", eng: "Penguin", ru: "Пингвин", uz: "Pingvin", emoji: "🐧" },
+
+            // === ВЕЩИ И ТРАНСПОРТ (20) ===
+            { cat: "things", catName: "🚗 Вещи и Транспорт (Things & Transport)", eng: "Car", ru: "Машина", uz: "Mashina", emoji: "🚗" },
+            { cat: "things", eng: "Plane", ru: "Самолет", uz: "Samolyot", emoji: "✈️" },
+            { cat: "things", eng: "Ball", ru: "Мяч", uz: "To'p", emoji: "⚽" },
+            { cat: "things", eng: "Book", ru: "Книга", uz: "Kitob", emoji: "📘" },
+            { cat: "things", eng: "Clock", ru: "Часы", uz: "Soat", emoji: "⏰" },
+            { cat: "things", eng: "House", ru: "Дом", uz: "Uy", emoji: "🏠" },
+            { cat: "things", eng: "Bicycle", ru: "Велосипед", uz: "Velosiped", emoji: "🚲" },
+            { cat: "things", eng: "Computer", ru: "Компьютер", uz: "Kompyuter", emoji: "💻" },
+            { cat: "things", eng: "Chair", ru: "Стул", uz: "Stul", emoji: "🪑" },
+            { cat: "things", eng: "Table", ru: "Стол", uz: "Stol", emoji: "🪵" },
+            { cat: "things", eng: "Phone", ru: "Телефон", uz: "Telefon", emoji: "📱" },
+            { cat: "things", eng: "Bed", ru: "Кровать", uz: "Krovat", emoji: "🛏️" },
+            { cat: "things", eng: "Key", ru: "Ключ", uz: "Kalit", emoji: "🔑" },
+            { cat: "things", eng: "Pen", ru: "Ручка", uz: "Ruchka", emoji: "🖊️" },
+            { cat: "things", eng: "Bag", ru: "Сумка", uz: "Sumka", emoji: "🎒" },
+            { cat: "things", eng: "Train", ru: "Поезд", uz: "Poyezd", emoji: "🚂" },
+            { cat: "things", eng: "Ship", ru: "Корабль", uz: "Kema", emoji: "🚢" },
+            { cat: "things", eng: "Bus", ru: "Автобус", uz: "Avtobus", emoji: "🚌" },
+            { cat: "things", eng: "Toy", ru: "Игрушка", uz: "O'yinchoq", emoji: "🧸" },
+            { cat: "things", eng: "Mirror", ru: "Зеркало", uz: "Ko'zgu", emoji: "🪞" },
+
+            // === ПРОФЕССИИ (15) ===
+            { cat: "professions", catName: "🧑‍⚕️ Профессии (Professions)", eng: "Doctor", ru: "Врач", uz: "Shifokor", emoji: "🩺" },
+            { cat: "professions", eng: "Teacher", ru: "Учитель", uz: "O'qituvchi", emoji: "👩‍🏫" },
+            { cat: "professions", eng: "Fireman", ru: "Пожарный", uz: "O't o'chiruvchi", emoji: "👨‍🚒" },
+            { cat: "professions", eng: "Pilot", ru: "Пилот", uz: "Uchuvchi", emoji: "🧑‍✈️" },
+            { cat: "professions", eng: "Chef", ru: "Повар", uz: "Oshpaz", emoji: "👨‍🍳" },
+            { cat: "professions", eng: "Police", ru: "Полиция", uz: "Politsiya", emoji: "👮" },
+            { cat: "professions", eng: "Artist", ru: "Художник", uz: "Rassom", emoji: "🎨" },
+            { cat: "professions", eng: "Astronaut", ru: "Космонавт", uz: "Cosmonavt", emoji: "🧑‍🚀" },
+            { cat: "professions", eng: "Builder", ru: "Строитель", uz: "Quruvchi", emoji: "建造" },
+            { cat: "professions", eng: "Dentist", ru: "Стоматолог", uz: "Stomatolog", emoji: "🦷" },
+            { cat: "professions", eng: "Singer", ru: "Певец", uz: "Xonanda", emoji: "🎤" },
+            { cat: "professions", eng: "Farmer", ru: "Фермер", uz: "Dehqon", emoji: "👨‍🌾" },
+            { cat: "professions", eng: "Driver", ru: "Водитель", uz: "Haydovchi", emoji: "👨‍" },
+            { cat: "professions", eng: "Footballer", ru: "Футболист", uz: "Futbolchi", emoji: "🏃‍♂️" },
+            { cat: "professions", eng: "Blogger", ru: "Блогер", uz: "Bloger", emoji: "🤳" },
+
+            // === ЕДА И ФРУКТЫ (20) ===
+            { cat: "food", catName: "🍏 Еда и Фрукты (Food & Fruits)", eng: "Apple", ru: "Яблоко", uz: "Olma", emoji: "🍏" },
+            { cat: "food", eng: "Banana", ru: "Банан", uz: "Banan", emoji: "🍌" },
+            { cat: "food", eng: "Orange", ru: "Апельсин", uz: "Apelsin", emoji: "🍊" },
+            { cat: "food", eng: "Milk", ru: "Молоко", uz: "Sut", emoji: "🥛" },
+            { cat: "food", eng: "Water", ru: "Вода", uz: "Suv", emoji: "💧" },
+            { cat: "food", eng: "Bread", ru: "Хлеб", uz: "Non", emoji: "🍞" },
+            { cat: "food", eng: "Cheese", ru: "Сыр", uz: "Pishloq", emoji: "🧀" },
+            { cat: "food", eng: "Egg", ru: "Яйцо", uz: "Tuxum", emoji: "🥚" },
+            { cat: "food", eng: "Fish", ru: "Рыба", uz: "Baliq", emoji: "🐟" },
+            { cat: "food", eng: "Cake", ru: "Торт", uz: "Tort", emoji: "🎂" },
+            { cat: "food", eng: "Ice cream", ru: "Мороженое", uz: "Muzqaymoq", emoji: "🍦" },
+            { cat: "food", eng: "Pizza", ru: "Пицца", uz: "Pitsa", emoji: "🍕" },
+            { cat: "food", eng: "Strawberry", ru: "Клубника", uz: "Qulupnay", emoji: "🍓" },
+            { cat: "food", eng: "Watermelon", ru: "Арбуз", uz: "Tarvuz", emoji: "🍉" },
+            { cat: "food", eng: "Tomato", ru: "Помидор", uz: "Pomidor", emoji: "🍅" },
+            { cat: "food", eng: "Potato", ru: "Картошка", uz: "Kartoshka", emoji: "🥔" },
+            { cat: "food", eng: "Carrot", ru: "Морковь", uz: "Sabzi", emoji: "🥕" },
+            { cat: "food", eng: "Juice", ru: "Сок", uz: "Sharbat", emoji: "🧃" },
+            { cat: "food", eng: "Honey", ru: "Мёд", uz: "Asal", emoji: "🍯" },
+            { cat: "food", eng: "Chocolate", ru: "Шоколад", uz: "Shokolad", emoji: "🍫" },
+
+            // === ЦВЕТА (10) ===
+            { cat: "colors", catName: "🎨 Цвета (Colors)", eng: "Red", ru: "Красный", uz: "Qizil", emoji: "🔴" },
+            { cat: "colors", eng: "Blue", ru: "Синий", uz: "Ko'k", emoji: "🔵" },
+            { cat: "colors", eng: "Green", ru: "Зеленый", uz: "Yashil", emoji: "🟢" },
+            { cat: "colors", eng: "Yellow", ru: "Желтый", uz: "Sariq", emoji: "🟡" },
+            { cat: "colors", eng: "Orange", ru: "Оранжевый", uz: "Olovrang", emoji: "🟠" },
+            { cat: "colors", eng: "Purple", ru: "Фиолетовый", uz: "Binafsha", emoji: "🟣" },
+            { cat: "colors", eng: "Pink", ru: "Розовый", uz: "Pushti", emoji: "🌸" },
+            { cat: "colors", eng: "Black", ru: "Черный", uz: "Qora", emoji: "⚫" },
+            { cat: "colors", eng: "White", ru: "Белый", uz: "Oq", emoji: "⚪" },
+            { cat: "colors", eng: "Brown", ru: "Коричневый", uz: "Jigarrang", emoji: "🟤" },
+
+            // === ПРИРОДА И ОДЕЖДА (15) ===
+            { cat: "nature", catName: "🌿 Природа и Одежда (Nature & Clothes)", eng: "Sun", ru: "Солнце", uz: "Quyosh", emoji: "☀️" },
+            { cat: "nature", eng: "Moon", ru: "Луна", uz: "Oy", emoji: "🌙" },
+            { cat: "nature", eng: "Star", ru: "Звезда", uz: "Yulduz", emoji: "⭐" },
+            { cat: "nature", eng: "Tree", ru: "Дерево", uz: "Daraxt", emoji: "🌳" },
+            { cat: "nature", eng: "Flower", ru: "Цветок", uz: "Gul", emoji: "🌸" },
+            { cat: "nature", eng: "Water", ru: "Вода", uz: "Suv", emoji: "🌊" },
+            { cat: "nature", eng: "Rain", ru: "Дождь", uz: "Yomg'ir", emoji: "🌧️" },
+            { cat: "nature", eng: "Snow", ru: "Снег", uz: "Qor", emoji: "❄️" },
+            { cat: "nature", eng: "Fire", ru: "Огонь", uz: "Olov", emoji: "🔥" },
+            { cat: "nature", eng: "Shirt", ru: "Рубашка", uz: "Ko'ylak", emoji: "👕" },
+            { cat: "nature", eng: "Shoes", ru: "Обувь", uz: "Poyabzal", emoji: "👟" },
+            { cat: "nature", eng: "Hat", ru: "Шапка", uz: "Shapka", emoji: "🧢" },
+            { cat: "nature", eng: "Socks", ru: "Носки", uz: "Paypoq", emoji: "🧦" },
+            { cat: "nature", eng: "Dress", ru: "Платье", uz: "Ko'ylak (ayollar)", emoji: "👗" },
+            { cat: "nature", eng: "Glasses", ru: "Очки", uz: "Ko'zoynak", emoji: "👓" }
+        ];
+
+        // АВТОМАТИЧЕСКАЯ СБОРКА САЙТА ИЗ БАЗЫ ДАННЫХ
+        const container = document.getElementById('main-content');
+        let currentCategory = "";
+        let currentGrid = null;
+
+        database.forEach(item => {
+            // Если началась новая категория — создаем заголовок и сетку
+            if (item.catName && item.catName !== currentCategory) {
+                currentCategory = item.catName;
+                
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                
+                const title = document.createElement('div');
+                title.className = 'category-title';
+                title.innerText = item.catName;
+                section.appendChild(title);
+                
+                currentGrid = document.createElement('div');
+                currentGrid.className = 'grid-container ' + item.cat;
+                section.appendChild(currentGrid);
+                
+                container.appendChild(section);
+            }
+
+            // Создаем саму карточку
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-cat', item.cat);
+            card.onclick = function() { play(item.eng, this); };
+
+            card.innerHTML = `
+                <span class="emoji">${item.emoji}</span>
+                <div class="word">${item.eng}</div>
+                <div class="translations">
+                    <div class="trans-ru">${item.ru}</div>
+                    <div class="trans-uz">${item.uz}</div>
+                </div>
+            `;
+
+            if (currentGrid) {
+                currentGrid.appendChild(card);
+            }
+        });
+
+        // ФУНКЦИЯ ОНЛАЙН-ОЗВУЧКИ
+        function play(wordName, cardElement) {
+            cardElement.classList.add('playing');
+            setTimeout(() => cardElement.classList.remove('playing'), 120);
+
+            var audioUrl = 'https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(wordName) + '&type=2';
+            var audio = new Audio(audioUrl);
+            
+            audio.play().catch(function(error) {
+                console.error("Ошибка воспроизведения звука:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
